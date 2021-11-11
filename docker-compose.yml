@@ -6,17 +6,16 @@ services:
         ports:
             - "${DB_PORT}:5432"
         environment:
-            - POSTGRES_DB=DB
-            - POSTGRES_USER="${DB_USERNAME}"
-            - POSTGRES_PASSWORD="${DB_PASSWORD}"
-            - PGGSSENCMODE=disable
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_HOST_AUTH_METHOD=trust
         volumes:
             - "./dbdata:/var/lib/postgresql/data"
     dev: 
         build:
             context: .
             target: nestjs-dev
-
         ports: 
             - "3000:3000"
         volumes:
