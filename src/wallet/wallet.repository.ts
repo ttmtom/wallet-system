@@ -19,8 +19,9 @@ export class WalletRepository implements IWalletRepository {
     private readonly repository: Repository<Wallet>,
   ) {}
 
-  save(wallet: Wallet): Promise<void> {
-    throw new Error('Method not implemented.');
+  async save(wallet: Wallet): Promise<void> {
+    await this.repository.save([wallet]);
+    return;
   }
 
   findAll(): Promise<Wallet[]> {

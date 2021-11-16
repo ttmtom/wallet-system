@@ -17,13 +17,13 @@ function getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
     database: configService.get('DB_NAME'),
     entities: [Wallet],
     synchronize: true,
+    autoLoadEntities: true,
   };
 }
 
 export const typeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
-  useFactory: async (
-    configService: ConfigService,
-  ): Promise<TypeOrmModuleOptions> => getOrmConfig(configService),
+  useFactory: async (configService: ConfigService) =>
+    getOrmConfig(configService),
   inject: [ConfigService],
 };
