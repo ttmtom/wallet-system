@@ -8,7 +8,7 @@ export class Wallet {
   @Column('int')
   balance: number;
 
-  @Column('char')
+  @PrimaryColumn('uuid')
   owner: string;
 
   constructor(id: string, balance: number, owner: string) {

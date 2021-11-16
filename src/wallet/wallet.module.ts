@@ -1,11 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeormDbConnection } from 'src/db/connection';
+import { connectionName } from 'src/db/connection';
 import { Wallet } from './wallet.entity';
 import { WalletController } from './wallet.controller';
+import { CqrsModule } from '@nestjs/cqrs';
+import queries from './queries';
+import { WalletRepository, WalletRepositorySymbol } from './wallet.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Wallet], typeormDbConnection)],
+  imports: [CqrsModule, TypeOrmModule.forFeature([Wallet], connectionName)],
   controllers: [WalletController],
+  providers: [
+    {
+      provide: WalletRepositorySymbol,
+      useClass: WalletRepository,
+    },
+    ...queries,
+  ],
+  exports: [WalletRepositorySymbol],
 })
 export class WalletModule {}
