@@ -9,18 +9,18 @@ import { Wallet } from '@wallet/wallet.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
-    // TypeOrmModule.forRoot({
-    //   name: connectionName,
-    //   type: 'postgres',
-    //   host: 'db',
-    //   port: 5432,
-    //   username: 'user',
-    //   password: 'password',
-    //   database: 'DB',
-    //   entities: [Wallet],
-    //   synchronize: true,
-    // }),
+    // TypeOrmModule.forRootAsync(typeOrmConfigAsync),
+    TypeOrmModule.forRoot({
+      name: connectionName,
+      type: 'postgres',
+      host: 'postgres',
+      port: 5432,
+      username: 'user',
+      password: 'password',
+      database: 'DB',
+      entities: [Wallet],
+      synchronize: true,
+    }),
     WalletModule,
   ],
 })

@@ -1,3 +1,4 @@
+import { Currency } from '@constants/currency';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -5,11 +6,17 @@ export class Wallet {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column('int')
+  @Column('float')
   balance: number;
 
-  @PrimaryColumn('uuid')
+  @Column('uuid')
   owner: string;
+
+  @Column({
+    type: 'enum',
+    enum: Currency,
+  })
+  currency: Currency;
 
   constructor(id: string, balance: number, owner: string) {
     this.id = id;

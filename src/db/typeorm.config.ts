@@ -10,7 +10,7 @@ function getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
   return {
     name: connectionName,
     type: 'postgres',
-    host: configService.get('DB_HOST') || 'localhost',
+    host: configService.get('DB_HOST') || 'postgres',
     port: +configService.get('DB_PORT') || 5432,
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
