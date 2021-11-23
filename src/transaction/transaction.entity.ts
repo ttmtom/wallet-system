@@ -13,4 +13,7 @@ export class Transaction {
 
   @Column('uuid')
   to: string;
+
+  @Column('timestamp')
+  timestamp: Date;
 }

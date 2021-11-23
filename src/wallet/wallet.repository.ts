@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
 
 export interface IWalletRepository {
-  save(wallet: Wallet): Promise<void>;
+  save(wallets: Wallet[]): Promise<string[]>;
   findAll(): Promise<Wallet[]>;
-  findById(id: string): Promise<Wallet>;
+  findByIds(ids: string[]): Promise<Wallet[]>;
 }
 
 export const WalletRepositorySymbol = Symbol('wallet_repository');
@@ -19,16 +19,16 @@ export class WalletRepository implements IWalletRepository {
     private readonly repository: Repository<Wallet>,
   ) {}
 
-  async save(wallet: Wallet): Promise<void> {
-    await this.repository.save([wallet]);
-    return;
+  async save(wallets: Wallet[]): Promise<string[]> {
+    const resp = await this.repository.save(wallets);
+    return resp.map((wallet) => wallet.id);
   }
 
   findAll(): Promise<Wallet[]> {
     return this.repository.find();
   }
 
-  findById(id: string): Promise<Wallet> {
-    throw new Error('Method not implemented.');
+  findByIds(ids: string[]): Promise<Wallet[]> {
+    return this.repository.findByIds(ids);
   }
 }
