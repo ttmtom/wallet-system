@@ -6,10 +6,16 @@ export class Wallet {
   @PrimaryColumn('uuid')
   id: string;
 
+  @Column('timestamp')
+  createdAt: Date;
+
+  @Column('timestamp')
+  lastUpdate: Date;
+
   @Column('float')
   balance: number;
 
-  @Column('uuid')
+  @Column('text')
   owner: string;
 
   @Column({
@@ -18,10 +24,13 @@ export class Wallet {
   })
   currency: Currency;
 
-  constructor(id: string, balance: number, owner: string) {
+  constructor(id: string, owner: string, currency: Currency) {
     this.id = id;
-    this.balance = balance;
     this.owner = owner;
+    this.currency = currency;
+    this.balance = 0;
+    this.createdAt = new Date();
+    this.lastUpdate = new Date();
   }
 
   pay(amount: number) {

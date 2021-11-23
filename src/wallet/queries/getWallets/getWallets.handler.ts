@@ -15,8 +15,6 @@ export class GetWalletHandler implements IQueryHandler<GetWalletsQuery> {
   ) {}
 
   async execute(query: GetWalletsQuery): Promise<Wallet[]> {
-    console.log('---- hii  exec');
-    console.log(query);
-    return this.repository.findAll();
+    return this.repository.findByOwnerId(query.ownerId);
   }
 }

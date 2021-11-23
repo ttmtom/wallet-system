@@ -7,7 +7,8 @@ import { Wallet } from './wallet.entity';
 export interface IWalletRepository {
   save(wallets: Wallet[]): Promise<string[]>;
   findAll(): Promise<Wallet[]>;
-  findByIds(ids: string[]): Promise<Wallet[]>;
+  findByOwnerId(id: string): Promise<Wallet[]>;
+  findByWalletIds(ids: string[]): Promise<Wallet[]>;
 }
 
 export const WalletRepositorySymbol = Symbol('wallet_repository');
@@ -28,7 +29,15 @@ export class WalletRepository implements IWalletRepository {
     return this.repository.find();
   }
 
-  findByIds(ids: string[]): Promise<Wallet[]> {
+  findByWalletIds(ids: string[]): Promise<Wallet[]> {
     return this.repository.findByIds(ids);
+  }
+
+  findByOwnerId(id: string): Promise<Wallet[]> {
+    return this.repository.find({
+      where: {
+        owner: id,
+      },
+    });
   }
 }

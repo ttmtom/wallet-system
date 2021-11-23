@@ -5,6 +5,7 @@ import { Wallet } from './wallet.entity';
 import { WalletController } from './wallet.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import queries from './queries';
+import commands from './commands';
 import { WalletRepository, WalletRepositorySymbol } from './wallet.repository';
 
 @Module({
@@ -16,6 +17,7 @@ import { WalletRepository, WalletRepositorySymbol } from './wallet.repository';
       useClass: WalletRepository,
     },
     ...queries,
+    ...commands,
   ],
   exports: [WalletRepositorySymbol],
 })
