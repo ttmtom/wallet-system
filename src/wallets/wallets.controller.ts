@@ -24,6 +24,7 @@ import { ChargeWalletBody } from './dto/chargeWalletBody.dto';
 import { ICreateWalletResponse } from './response/createWalletResponse';
 import { IGetWalletResponse } from './response/getWalletResponse';
 import { IGetWalletsResponse } from './response/getWalletsResponse';
+import { ChargeWalletCommand } from './commands/chargeWallet/chargeWallet.command';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -71,15 +72,23 @@ export class WalletsController {
     return { id: walletId };
   }
 
-  // @Post('/:id/charge')
-  // async chargeWallet(
-  //   @Headers('X-user-id') userId: string,
-  //   @Body() chargeWalletBody: ChargeWalletBody,
-  //   @Param(
-  //     'id',
-  //     new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-  //   )
-  //   id: string,
-  // ): Promise<void> {
-  // }
+  @Post('/:id/charge')
+  async chargeWallet(
+    @Headers('X-user-id') userId: string,
+    @Body() chargeWalletBody: ChargeWalletBody,
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: string,
+  ): Promise<string> {
+    return this.commandBus.execute(
+      new ChargeWalletCommand(
+        userId,
+        id,
+        chargeWalletBody.from,
+        chargeWalletBody.amount,
+      ),
+    );
+  }
 }

@@ -1,10 +1,10 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Wallet } from '@wallet/wallet.entity';
+import { Wallet } from 'src/wallets/wallet.entity';
 import {
   WalletsRepository,
   WalletsRepositorySymbol,
-} from '@wallet/wallets.repository';
+} from 'src/wallets/wallets.repository';
 import { GetWalletByIdQuery } from './getWalletById.query';
 
 @QueryHandler(GetWalletByIdQuery)

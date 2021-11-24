@@ -3,7 +3,7 @@ import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
-import { Wallet } from '@wallet/wallet.entity';
+import { Wallet } from 'src/wallets/wallet.entity';
 import { connectionName } from './connection';
 
 function getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {

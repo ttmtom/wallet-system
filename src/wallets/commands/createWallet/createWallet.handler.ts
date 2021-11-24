@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
-import { Wallet } from '@wallet/wallet.entity';
+import { Wallet } from 'src/wallets/wallet.entity';
 import * as uuid from 'uuid';
 import {
   WalletsRepository,
   WalletsRepositorySymbol,
-} from '@wallet/wallets.repository';
+} from 'src/wallets/wallets.repository';
 import { CreateWalletCommand } from './createWallet.command';
-import { GetWalletsQuery } from '@wallet/queries/getWallets/getWallets.query';
+import { GetWalletsQuery } from 'src/wallets/queries/getWallets/getWallets.query';
 
 @CommandHandler(CreateWalletCommand)
 export class CreateWalletHandler

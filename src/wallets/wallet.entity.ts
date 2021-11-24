@@ -1,5 +1,6 @@
 import { Currency } from '@constants/currency';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Transactions } from 'src/transactions/transaction.entity';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Wallet {
@@ -10,7 +11,7 @@ export class Wallet {
   createdAt: Date;
 
   @Column('timestamp')
-  lastUpdate: Date;
+  updateAt: Date;
 
   @Column('float')
   balance: number;
@@ -24,13 +25,16 @@ export class Wallet {
   })
   currency: Currency;
 
+  @OneToMany(() => Transactions, (transaction) => transaction.id)
+  transactionRecord: Transactions[];
+
   constructor(id: string, owner: string, currency: Currency) {
     this.id = id;
     this.owner = owner;
     this.currency = currency;
     this.balance = 0;
-    this.createdAt = new Date();
-    this.lastUpdate = new Date();
+    this.createdAt = this.updateAt = new Date();
+    this.transactionRecord = [];
   }
 
   pay(amount: number) {
@@ -39,5 +43,15 @@ export class Wallet {
 
   charge(amount: number) {
     this.balance += amount;
+  }
+
+  createTransaction(transaction: Transactions) {
+    if (transaction.from === this.id) {
+      this.pay(transaction.amount);
+    }
+    if (transaction.to === this.id) {
+      this.charge(transaction.amount);
+    }
+    this.transactionRecord.push(transaction);
   }
 }

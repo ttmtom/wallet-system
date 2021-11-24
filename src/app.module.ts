@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { typeOrmConfigAsync } from 'src/db/typeorm.config';
-import { WalletsModule } from '@wallet/wallets.module';
+import { WalletsModule } from 'src/wallets/wallets.module';
 import { connectionName } from 'src/db/connection';
-import { Wallet } from '@wallet/wallet.entity';
+import { Wallet } from 'src/wallets/wallet.entity';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { Wallet } from '@wallet/wallet.entity';
       synchronize: true,
     }),
     WalletsModule,
+    TransactionsModule,
   ],
 })
 export class AppModule {}

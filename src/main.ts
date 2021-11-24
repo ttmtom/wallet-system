@@ -10,7 +10,6 @@ async function bootstrap() {
     .setTitle('Wallet system')
     .setDescription('The wallets API description')
     .setVersion('1.0')
-    // .addTag('wallet')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

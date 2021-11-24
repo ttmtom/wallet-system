@@ -1,4 +1,4 @@
-import { Wallet } from '@wallet/wallet.entity';
+import { Wallet } from 'src/wallets/wallet.entity';
 
 export interface IGetWalletsResponse {
   wallets: Wallet[];

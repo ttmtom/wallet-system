@@ -2,7 +2,7 @@ import { TransactionStatus } from '@constants/transactionStatus';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class Transaction {
+export class Transactions {
   @PrimaryColumn('uuid')
   id: string;
 
@@ -18,9 +18,21 @@ export class Transaction {
   @Column('text')
   status: TransactionStatus;
 
-  @Column('timestamp')
-  createAr: Date;
+  @Column('text')
+  remark: string;
 
   @Column('timestamp')
-  lastUpdate: Date;
+  createAt: Date;
+
+  @Column('timestamp')
+  updateAt: Date;
+
+  constructor(id: string, amount: number, from: string, to: string) {
+    this.id = id;
+    this.amount = amount;
+    this.from = from;
+    this.to = to;
+    this.status = TransactionStatus.PENDING;
+    this.createAt = this.createAt = new Date();
+  }
 }

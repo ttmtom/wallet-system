@@ -20,7 +20,7 @@
     "paths": {
       "@constants/*": ["src/constants/*"],
       "@app/*": ["src/app/*"],
-      "@wallet/*": ["src/wallet/*"]
+      "@wallet/*": ["src/wallets/*"]
     }
   }
 }
