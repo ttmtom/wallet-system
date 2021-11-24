@@ -8,67 +8,68 @@ import {
   Body,
   Param,
   Query,
-  ParseIntPipe,
+  ParseUUIDPipe,
+  HttpStatus,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetWalletsQuery } from './queries/getWallets/getWallets.query';
 import { Wallet } from './wallet.entity';
-import { GetWalletQueryDto } from './dto/getWalletsQuery.dto';
+import { GetWalletsQueryDto } from './dto/getWalletsQuery.dto';
 import { PostWalletBodyDto } from './dto/postWalletBody.dto';
 import { Currency } from '@constants/currency';
-import { GetWalletQuery } from './queries/getWallet/getWallet.query';
+import { GetWalletByIdQuery } from './queries/getWalletById/getWalletById.query';
 import { CreateWalletCommand } from './commands/createWallet/createWallet.command';
+import { ChargeWalletBody } from './dto/chargeWalletBody.dto';
 
-@ApiTags('wallet')
-@Controller('wallet')
-export class WalletController {
+@ApiTags('wallets')
+@Controller('wallets')
+export class WalletsController {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
 
   @Get()
-  @ApiHeader({
-    name: 'X-user-id',
-    description: 'user id',
-  })
   @ApiQuery({ name: 'currency', enum: Currency, required: false })
   async getWallets(
-    @Req() request: Request,
-    @Query() query: GetWalletQueryDto,
+    @Query() query: GetWalletsQueryDto,
+    @Headers('X-user-id') userId: string,
   ): Promise<Wallet[]> {
-    const userId = request.get('X-user-id');
-
     return this.queryBus.execute(new GetWalletsQuery(userId, query.currency));
   }
 
-  @Get(':id')
-  @ApiHeader({
-    name: 'X-user-id',
-    description: 'user id',
-  })
+  @Get('/:id')
   async getWallet(
-    @Req() request: Request,
-    @Param('Wallet Id', new ParseIntPipe()) walletId: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: string,
+    @Headers('X-user-id') userId: string,
   ): Promise<Wallet> {
-    const userId = request.get('X-user-id');
-    return this.queryBus.execute(new GetWalletQuery(userId, walletId));
+    return this.queryBus.execute(new GetWalletByIdQuery(userId, id));
   }
 
   @Post()
-  @ApiHeader({
-    name: 'X-user-id',
-    description: 'user id',
-  })
   async createWallet(
-    @Req() request: Request,
     @Body() postWalletBody: PostWalletBodyDto,
+    @Headers('X-user-id') userId: string,
   ): Promise<string> {
-    const userId = request.get('X-user-id');
-
     return this.commandBus.execute(
       new CreateWalletCommand(userId, postWalletBody.currency),
     );
   }
+
+  // @Post('/:id/charge')
+  // async chargeWallet(
+  //   @Headers('X-user-id') userId: string,
+  //   @Body() chargeWalletBody: ChargeWalletBody,
+  //   @Param(
+  //     'id',
+  //     new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+  //   )
+  //   id: string,
+  // ): Promise<Wallet> {
+  // }
 }

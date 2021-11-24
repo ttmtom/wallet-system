@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@constants/transactionStatus';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -13,6 +14,9 @@ export class Transaction {
 
   @Column('uuid')
   to: string;
+
+  @Column('text')
+  status: TransactionStatus;
 
   @Column('timestamp')
   timestamp: Date;

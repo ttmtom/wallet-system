@@ -1,5 +1,5 @@
 import { Currency } from '@constants/currency';
 
-export interface GetWalletQueryDto {
+export interface GetWalletsQueryDto {
   currency?: Currency;
 }

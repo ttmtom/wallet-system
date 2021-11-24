@@ -1,6 +1,4 @@
-import { Currency } from '@constants/currency';
-
-export class GetWalletQuery {
+export class GetWalletByIdQuery {
   constructor(
     public readonly ownerId: string,
     public readonly walletId: string,

@@ -1,4 +1,4 @@
-import { GetWalletHandler } from './getWallets/getWallets.handler';
-import { GetWalletsQuery } from './getWallets/getWallets.query';
+import { GetWalletByIdHandler } from './getWalletById/getWalletById.handler';
+import { GetWalletsHandler } from './getWallets/getWallets.handler';
 
-export default [GetWalletHandler, GetWalletsQuery];
+export default [GetWalletsHandler, GetWalletByIdHandler];

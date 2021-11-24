@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { typeOrmConfigAsync } from 'src/db/typeorm.config';
-import { WalletModule } from 'src/wallet/wallet.module';
+import { WalletsModule } from '@wallet/wallets.module';
 import { connectionName } from 'src/db/connection';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { Wallet } from '@wallet/wallet.entity';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { Wallet } from 'src/wallet/wallet.entity';
       entities: [Wallet],
       synchronize: true,
     }),
-    WalletModule,
+    WalletsModule,
   ],
 })
 export class AppModule {}

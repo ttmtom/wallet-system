@@ -5,18 +5,16 @@ import {
   WalletsRepository,
   WalletsRepositorySymbol,
 } from '@wallet/wallets.repository';
-import { GetWalletsQuery } from './getWallets.query';
+import { GetWalletByIdQuery } from './getWalletById.query';
 
-@QueryHandler(GetWalletsQuery)
-export class GetWalletsHandler
-  implements IQueryHandler<GetWalletsQuery, Wallet[]>
-{
+@QueryHandler(GetWalletByIdQuery)
+export class GetWalletByIdHandler implements IQueryHandler<GetWalletByIdQuery> {
   constructor(
     @Inject(WalletsRepositorySymbol)
     private readonly repository: WalletsRepository,
   ) {}
 
-  async execute(query: GetWalletsQuery): Promise<Wallet[]> {
-    return this.repository.findByOwnerId(query.ownerId, query.currency);
+  async execute(query: GetWalletByIdQuery): Promise<Wallet[]> {
+    return this.repository.findByWalletIds([query.walletId]);
   }
 }

@@ -7,10 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Wallets')
+    .setTitle('Wallet system')
     .setDescription('The wallets API description')
     .setVersion('1.0')
-    .addTag('wallet')
+    // .addTag('wallet')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
