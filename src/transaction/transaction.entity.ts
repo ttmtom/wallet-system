@@ -19,5 +19,8 @@ export class Transaction {
   status: TransactionStatus;
 
   @Column('timestamp')
-  timestamp: Date;
+  createAr: Date;
+
+  @Column('timestamp')
+  lastUpdate: Date;
 }

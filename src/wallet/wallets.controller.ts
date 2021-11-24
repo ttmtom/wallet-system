@@ -21,6 +21,9 @@ import { Currency } from '@constants/currency';
 import { GetWalletByIdQuery } from './queries/getWalletById/getWalletById.query';
 import { CreateWalletCommand } from './commands/createWallet/createWallet.command';
 import { ChargeWalletBody } from './dto/chargeWalletBody.dto';
+import { ICreateWalletResponse } from './response/createWalletResponse';
+import { IGetWalletResponse } from './response/getWalletResponse';
+import { IGetWalletsResponse } from './response/getWalletsResponse';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -35,8 +38,11 @@ export class WalletsController {
   async getWallets(
     @Query() query: GetWalletsQueryDto,
     @Headers('X-user-id') userId: string,
-  ): Promise<Wallet[]> {
-    return this.queryBus.execute(new GetWalletsQuery(userId, query.currency));
+  ): Promise<IGetWalletsResponse> {
+    const wallets = await this.queryBus.execute(
+      new GetWalletsQuery(userId, query.currency),
+    );
+    return { wallets };
   }
 
   @Get('/:id')
@@ -47,18 +53,22 @@ export class WalletsController {
     )
     id: string,
     @Headers('X-user-id') userId: string,
-  ): Promise<Wallet> {
-    return this.queryBus.execute(new GetWalletByIdQuery(userId, id));
+  ): Promise<IGetWalletResponse> {
+    const wallet = await this.queryBus.execute(
+      new GetWalletByIdQuery(userId, id),
+    );
+    return { wallet };
   }
 
   @Post()
   async createWallet(
     @Body() postWalletBody: PostWalletBodyDto,
     @Headers('X-user-id') userId: string,
-  ): Promise<string> {
-    return this.commandBus.execute(
+  ): Promise<ICreateWalletResponse> {
+    const walletId = await this.commandBus.execute(
       new CreateWalletCommand(userId, postWalletBody.currency),
     );
+    return { id: walletId };
   }
 
   // @Post('/:id/charge')
@@ -70,6 +80,6 @@ export class WalletsController {
   //     new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
   //   )
   //   id: string,
-  // ): Promise<Wallet> {
+  // ): Promise<void> {
   // }
 }
