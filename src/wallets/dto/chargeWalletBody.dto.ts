@@ -1,3 +1,4 @@
+import { ChargeSource } from '@constants/chargeSource';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ChargeWalletBody {
@@ -5,5 +6,5 @@ export class ChargeWalletBody {
   amount: number;
 
   @ApiProperty()
-  from: string;
+  from: ChargeSource;
 }

@@ -22,6 +22,6 @@ import {
     ...queries,
     ...commands,
   ],
-  exports: [WalletsRepositorySymbol],
+  exports: [WalletsRepositorySymbol, TypeOrmModule],
 })
 export class WalletsModule {}

@@ -10,6 +10,7 @@ import {
   Query,
   ParseUUIDPipe,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -25,6 +26,7 @@ import { ICreateWalletResponse } from './response/createWalletResponse';
 import { IGetWalletResponse } from './response/getWalletResponse';
 import { IGetWalletsResponse } from './response/getWalletsResponse';
 import { ChargeWalletCommand } from './commands/chargeWallet/chargeWallet.command';
+import { SourceId } from '@constants/chargeSource';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -66,10 +68,10 @@ export class WalletsController {
     @Body() postWalletBody: PostWalletBodyDto,
     @Headers('X-user-id') userId: string,
   ): Promise<ICreateWalletResponse> {
-    const walletId = await this.commandBus.execute(
+    const wallet = await this.commandBus.execute(
       new CreateWalletCommand(userId, postWalletBody.currency),
     );
-    return { id: walletId };
+    return { wallet: wallet };
   }
 
   @Post('/:id/charge')
@@ -82,13 +84,13 @@ export class WalletsController {
     )
     id: string,
   ): Promise<string> {
+    const sourceId = SourceId[chargeWalletBody.from];
+    if (!sourceId) {
+      throw new HttpException('Source not support', HttpStatus.BAD_REQUEST);
+    }
+
     return this.commandBus.execute(
-      new ChargeWalletCommand(
-        userId,
-        id,
-        chargeWalletBody.from,
-        chargeWalletBody.amount,
-      ),
+      new ChargeWalletCommand(userId, id, sourceId, chargeWalletBody.amount),
     );
   }
 }

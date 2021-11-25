@@ -7,13 +7,17 @@ import {
   TransactionsRepository,
   TransactionsRepositorySymbol,
 } from './transactions.repository';
+import { TransactionsController } from './transactions.controller';
 import events from './events';
 import commands from './commands';
+import queries from './queries';
+import { WalletsModule } from '@wallet/wallets.module';
 
 @Module({
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([Transactions], connectionName),
+    WalletsModule,
   ],
   providers: [
     {
@@ -22,7 +26,9 @@ import commands from './commands';
     },
     ...commands,
     ...events,
+    ...queries,
   ],
   exports: [TransactionsRepositorySymbol],
+  controllers: [TransactionsController],
 })
 export class TransactionsModule {}

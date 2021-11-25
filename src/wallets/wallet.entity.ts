@@ -13,7 +13,7 @@ export class Wallet {
   @Column('timestamp')
   updateAt: Date;
 
-  @Column('float')
+  @Column('numeric')
   balance: number;
 
   @Column('text')
@@ -25,8 +25,8 @@ export class Wallet {
   })
   currency: Currency;
 
-  @OneToMany(() => Transactions, (transaction) => transaction.id)
-  transactionRecord: Transactions[];
+  @Column('uuid', { array: true })
+  transactionRecords: string[] = [];
 
   constructor(id: string, owner: string, currency: Currency) {
     this.id = id;
@@ -34,7 +34,6 @@ export class Wallet {
     this.currency = currency;
     this.balance = 0;
     this.createdAt = this.updateAt = new Date();
-    this.transactionRecord = [];
   }
 
   pay(amount: number) {
@@ -46,12 +45,6 @@ export class Wallet {
   }
 
   createTransaction(transaction: Transactions) {
-    if (transaction.from === this.id) {
-      this.pay(transaction.amount);
-    }
-    if (transaction.to === this.id) {
-      this.charge(transaction.amount);
-    }
-    this.transactionRecord.push(transaction);
+    this.transactionRecords.push(transaction.id);
   }
 }

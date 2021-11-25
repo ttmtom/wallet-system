@@ -19,7 +19,7 @@ export class CreateWalletHandler
     private readonly queryBus: QueryBus,
   ) {}
 
-  async execute(command: CreateWalletCommand): Promise<string> {
+  async execute(command: CreateWalletCommand): Promise<Wallet> {
     const { ownerId, currency } = command;
     const walletInDb: Wallet[] = await this.queryBus.execute(
       new GetWalletsQuery(ownerId, currency),
@@ -35,6 +35,7 @@ export class CreateWalletHandler
     const id = uuid.v4();
 
     const wallet = new Wallet(id, command.ownerId, command.currency);
-    return this.repository.save([wallet])[0];
+    const resp = await this.repository.save([wallet]);
+    return resp[0];
   }
 }

@@ -5,9 +5,10 @@ import { Repository } from 'typeorm';
 import { Transactions } from './transaction.entity';
 
 export interface ITransactionsRepository {
-  save(wallets: Transactions[]): Promise<string[]>;
+  save(wallets: Transactions[]): Promise<Transactions[]>;
   findAll(): Promise<Transactions[]>;
-  findByOwnerId(id: string): Promise<Transactions[]>;
+  findByIds(ids: string[]): Promise<Transactions[]>;
+  // findByOwnerId(id: string): Promise<Transactions[]>;
   findByWalletId(id: string): Promise<Transactions[]>;
 }
 
@@ -20,26 +21,28 @@ export class TransactionsRepository implements ITransactionsRepository {
     private readonly repository: Repository<Transactions>,
   ) {}
 
-  async save(wallets: Transactions[]): Promise<string[]> {
+  async save(wallets: Transactions[]): Promise<Transactions[]> {
     const resp = await this.repository.save(wallets);
-    return resp.map((wallet) => wallet.id);
+    return resp;
   }
 
   findAll(): Promise<Transactions[]> {
     return this.repository.find();
   }
 
+  findByIds(ids: string[]): Promise<Transactions[]> {
+    return this.repository.findByIds(ids);
+  }
+
   findByWalletId(id: string): Promise<Transactions[]> {
     return this.repository.find({
-      where: {
-        from: id,
-      },
+      where: [{ from: id }, { to: id }],
     });
   }
 
-  findByOwnerId(id: string): Promise<Transactions[]> {
-    return this.repository.find({
-      where: {},
-    });
-  }
+  // findByOwnerId(id: string): Promise<Transactions[]> {
+  //   return this.repository.find({
+  //     where: {},
+  //   });
+  // }
 }

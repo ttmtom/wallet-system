@@ -6,10 +6,9 @@ import {
   TransactionsRepositorySymbol,
 } from 'src/transactions/transactions.repository';
 import { CreateTransactionCommand } from './createTransaction.command';
-import uuid from 'uuid';
 
 @CommandHandler(CreateTransactionCommand)
-export class ChargeWalletHandler
+export class CreateTransactionHandler
   implements ICommandHandler<CreateTransactionCommand>
 {
   constructor(
@@ -17,13 +16,8 @@ export class ChargeWalletHandler
     private readonly repository: TransactionsRepository,
   ) {}
 
-  async execute(command: CreateTransactionCommand): Promise<string> {
-    const { from, to, amount } = command;
-
-    const transactionId = uuid.v4();
-    const transaction = new Transactions(transactionId, amount, from, to);
-
-    await this.repository.save([transaction]);
-    return transactionId;
+  async execute(command: CreateTransactionCommand): Promise<Transactions> {
+    const transaction = await this.repository.save([command.transaction]);
+    return transaction[0];
   }
 }

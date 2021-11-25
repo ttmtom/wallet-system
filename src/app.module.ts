@@ -6,6 +6,7 @@ import { WalletsModule } from 'src/wallets/wallets.module';
 import { connectionName } from 'src/db/connection';
 import { Wallet } from 'src/wallets/wallet.entity';
 import { TransactionsModule } from './transactions/transactions.module';
+import { Transactions } from './transactions/transaction.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { TransactionsModule } from './transactions/transactions.module';
       username: 'user',
       password: 'password',
       database: 'DB',
-      entities: [Wallet],
+      entities: [Wallet, Transactions],
       synchronize: true,
     }),
     WalletsModule,

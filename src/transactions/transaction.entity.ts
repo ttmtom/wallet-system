@@ -6,7 +6,7 @@ export class Transactions {
   @PrimaryColumn('uuid')
   id: string;
 
-  @Column('float')
+  @Column('numeric')
   amount: number;
 
   @Column('uuid')
@@ -19,7 +19,7 @@ export class Transactions {
   status: TransactionStatus;
 
   @Column('text')
-  remark: string;
+  remark = '';
 
   @Column('timestamp')
   createAt: Date;
@@ -33,6 +33,6 @@ export class Transactions {
     this.from = from;
     this.to = to;
     this.status = TransactionStatus.PENDING;
-    this.createAt = this.createAt = new Date();
+    this.createAt = this.updateAt = new Date();
   }
 }
