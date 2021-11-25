@@ -16,11 +16,11 @@ import { ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetWalletsQuery } from './queries/getWallets/getWallets.query';
 import { Wallet } from './wallet.entity';
 import { GetWalletsQueryDto } from './dto/getWalletsQuery.dto';
-import { PostWalletBodyDto } from './dto/postWalletBody.dto';
+import { CreateWalletDto } from './dto/createWallet.dto';
 import { Currency } from '@constants/currency';
 import { GetWalletByIdQuery } from './queries/getWalletById/getWalletById.query';
 import { CreateWalletCommand } from './commands/createWallet/createWallet.command';
-import { ChargeWalletBody } from './dto/chargeWalletBody.dto';
+import { ChargeWalletDto } from './dto/chargeWallet.dto';
 import { ICreateWalletResponse } from './response/createWalletResponse';
 import { IGetWalletResponse } from './response/getWalletResponse';
 import { IGetWalletsResponse } from './response/getWalletsResponse';
@@ -64,11 +64,11 @@ export class WalletsController {
 
   @Post()
   async createWallet(
-    @Body() postWalletBody: PostWalletBodyDto,
+    @Body() createWalletDto: CreateWalletDto,
     @Headers('X-user-id') userId: string,
   ): Promise<ICreateWalletResponse> {
     const wallet = await this.commandBus.execute(
-      new CreateWalletCommand(userId, postWalletBody.currency),
+      new CreateWalletCommand(userId, createWalletDto.currency),
     );
     return { wallet: wallet };
   }
@@ -81,15 +81,15 @@ export class WalletsController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: string,
-    @Body() chargeWalletBody: ChargeWalletBody,
+    @Body() chargeWalletDto: ChargeWalletDto,
   ): Promise<string> {
-    const sourceId = SourceId[chargeWalletBody.from];
+    const sourceId = SourceId[chargeWalletDto.from];
     if (!sourceId) {
       throw new HttpException('Source not support', HttpStatus.BAD_REQUEST);
     }
 
     return this.commandBus.execute(
-      new ChargeWalletCommand(userId, id, sourceId, chargeWalletBody.amount),
+      new ChargeWalletCommand(userId, id, sourceId, chargeWalletDto.amount),
     );
   }
 }
