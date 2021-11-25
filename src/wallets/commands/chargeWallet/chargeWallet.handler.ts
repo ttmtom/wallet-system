@@ -12,10 +12,8 @@ import {
   WalletsRepository,
   WalletsRepositorySymbol,
 } from 'src/wallets/wallets.repository';
-import { GetWalletsQuery } from 'src/wallets/queries/getWallets/getWallets.query';
 import { ChargeWalletCommand } from './chargeWallet.command';
 import { Transactions } from 'src/transactions/transaction.entity';
-import { CreateTransactionCommand } from 'src/transactions/commands/createTransacntion/createTransaction.command';
 import { CreateTransactionEvent } from '@transactions/events/createTransaction/createTransaction.event';
 import { UpdateTransactionEvent } from '@transactions/events/updateTransaction/updateTransaction.event';
 import { TransactionStatus } from '@constants/transactionStatus';

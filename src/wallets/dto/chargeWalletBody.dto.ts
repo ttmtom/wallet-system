@@ -5,6 +5,6 @@ export class ChargeWalletBody {
   @ApiProperty()
   amount: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: ChargeSource })
   from: ChargeSource;
 }

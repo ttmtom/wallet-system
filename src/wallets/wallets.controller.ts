@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import {
   Controller,
   Get,
@@ -50,12 +49,12 @@ export class WalletsController {
 
   @Get('/:id')
   async getWallet(
+    @Headers('X-user-id') userId: string,
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: string,
-    @Headers('X-user-id') userId: string,
   ): Promise<IGetWalletResponse> {
     const wallet = await this.queryBus.execute(
       new GetWalletByIdQuery(userId, id),
@@ -77,12 +76,12 @@ export class WalletsController {
   @Post('/:id/charge')
   async chargeWallet(
     @Headers('X-user-id') userId: string,
-    @Body() chargeWalletBody: ChargeWalletBody,
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: string,
+    @Body() chargeWalletBody: ChargeWalletBody,
   ): Promise<string> {
     const sourceId = SourceId[chargeWalletBody.from];
     if (!sourceId) {
