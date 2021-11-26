@@ -26,6 +26,7 @@ import { IGetWalletResponse } from './response/getWalletResponse';
 import { IGetWalletsResponse } from './response/getWalletsResponse';
 import { ChargeWalletCommand } from './commands/chargeWallet/chargeWallet.command';
 import { SourceId } from '@constants/chargeSource';
+import { ChargeWalletResponse } from './response/chargeWalletResponse';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -82,14 +83,18 @@ export class WalletsController {
     )
     id: string,
     @Body() chargeWalletDto: ChargeWalletDto,
-  ): Promise<string> {
+  ): Promise<ChargeWalletResponse> {
     const sourceId = SourceId[chargeWalletDto.from];
     if (!sourceId) {
       throw new HttpException('Source not support', HttpStatus.BAD_REQUEST);
     }
 
-    return this.commandBus.execute(
+    const record = await this.commandBus.execute(
       new ChargeWalletCommand(userId, id, sourceId, chargeWalletDto.amount),
     );
+
+    return { record };
   }
+
+  // @Post('/:id/transfer')
 }
