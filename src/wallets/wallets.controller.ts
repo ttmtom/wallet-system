@@ -83,13 +83,17 @@ export class WalletsController {
     id: string,
     @Body() chargeWalletDto: ChargeWalletDto,
   ): Promise<string> {
-    const sourceId = SourceId[chargeWalletDto.from];
-    if (!sourceId) {
+    if (!SourceId[chargeWalletDto.from]) {
       throw new HttpException('Source not support', HttpStatus.BAD_REQUEST);
     }
 
     return this.commandBus.execute(
-      new ChargeWalletCommand(userId, id, sourceId, chargeWalletDto.amount),
+      new ChargeWalletCommand(
+        userId,
+        id,
+        chargeWalletDto.from,
+        chargeWalletDto.amount,
+      ),
     );
   }
 }

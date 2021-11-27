@@ -17,6 +17,7 @@ import { Transactions } from 'src/transactions/transaction.entity';
 import { CreateTransactionEvent } from '@transactions/events/createTransaction/createTransaction.event';
 import { UpdateTransactionEvent } from '@transactions/events/updateTransaction/updateTransaction.event';
 import { TransactionStatus } from '@constants/transactionStatus';
+import { SourceId } from '@constants/chargeSource';
 
 @CommandHandler(ChargeWalletCommand)
 export class ChargeWalletHandler
@@ -51,13 +52,19 @@ export class ChargeWalletHandler
       );
     }
 
+    const sourceWallets = await this.walletsRepository.findByWalletIds([
+      SourceId[from],
+    ]);
+
     const transactionId = uuid.v4();
-    const transaction = new Transactions(transactionId, amount, from, walletId);
+    const transaction = new Transactions(
+      transactionId,
+      amount,
+      sourceWallets[0],
+      targetWallet,
+    );
 
     this.eventBus.publish(new CreateTransactionEvent(transaction));
-
-    targetWallet.createTransaction(transaction);
-    this.walletsRepository.save([targetWallet]);
 
     setTimeout(async () => {
       targetWallet.charge(amount);

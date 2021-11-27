@@ -1,6 +1,6 @@
 import { Currency } from '@constants/currency';
 import { Transactions } from 'src/transactions/transaction.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Wallet {
@@ -25,8 +25,19 @@ export class Wallet {
   })
   currency: Currency;
 
-  @Column('uuid', { array: true })
-  transactionRecords: string[] = [];
+  @OneToMany(
+    () => Transactions,
+    (transactions: Transactions) => transactions.from,
+    // {eager: true},
+  )
+  payRecords: Transactions[];
+
+  @OneToMany(
+    () => Transactions,
+    (transactions: Transactions) => transactions.to,
+    // {eager: true},
+  )
+  chargeRecords: Transactions[];
 
   constructor(id: string, owner: string, currency: Currency) {
     this.id = id;
@@ -42,9 +53,5 @@ export class Wallet {
 
   charge(amount: number) {
     this.balance += amount;
-  }
-
-  createTransaction(transaction: Transactions) {
-    this.transactionRecords.push(transaction.id);
   }
 }

@@ -1,5 +1,6 @@
 import { TransactionStatus } from '@constants/transactionStatus';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Wallet } from '@wallet/wallet.entity';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Transactions {
@@ -9,11 +10,17 @@ export class Transactions {
   @Column('numeric')
   amount: number;
 
-  @Column('uuid')
-  from: string;
+  @ManyToOne(() => Wallet, (wallet: Wallet) => wallet.payRecords, {
+    nullable: false,
+    eager: true,
+  })
+  from: Wallet;
 
-  @Column('uuid')
-  to: string;
+  @ManyToOne(() => Wallet, (wallet: Wallet) => wallet.chargeRecords, {
+    nullable: false,
+    eager: true,
+  })
+  to: Wallet;
 
   @Column('text')
   status: TransactionStatus;
@@ -27,7 +34,7 @@ export class Transactions {
   @Column('timestamp')
   updateAt: Date;
 
-  constructor(id: string, amount: number, from: string, to: string) {
+  constructor(id: string, amount: number, from: Wallet, to: Wallet) {
     this.id = id;
     this.amount = amount;
     this.from = from;

@@ -36,13 +36,7 @@ export class TransactionsRepository implements ITransactionsRepository {
 
   findByWalletId(id: string): Promise<Transactions[]> {
     return this.repository.find({
-      where: [{ from: id }, { to: id }],
+      where: [{ from: { id } }, { to: { id } }],
     });
   }
-
-  // findByOwnerId(id: string): Promise<Transactions[]> {
-  //   return this.repository.find({
-  //     where: {},
-  //   });
-  // }
 }
