@@ -6,16 +6,15 @@ import {
   ICommandHandler,
   QueryBus,
 } from '@nestjs/cqrs';
-import { Wallet } from 'src/wallets/wallet.entity';
-import * as uuid from 'uuid';
+import * as UUID from 'uuid';
 import {
   WalletsRepository,
   WalletsRepositorySymbol,
 } from 'src/wallets/wallets.repository';
 import { ChargeWalletCommand } from './chargeWallet.command';
 import { Transactions } from 'src/transactions/transaction.entity';
-import { CreateTransactionEvent } from '@transactions/events/createTransaction/createTransaction.event';
-import { UpdateTransactionEvent } from '@transactions/events/updateTransaction/updateTransaction.event';
+import { TransactionInitiatedEvent } from '@transactions/events/transactionInitiated/transactionInitiated.event';
+import { TransactionUpdatedEvent } from '@transactions/events/transactionUpdated/transactionUpdated.event';
 import { TransactionStatus } from '@constants/transactionStatus';
 import { SourceId } from '@constants/chargeSource';
 
@@ -34,7 +33,10 @@ export class ChargeWalletHandler
   async execute(command: ChargeWalletCommand): Promise<Transactions> {
     const { walletId, ownerId, amount, from } = command;
 
-    const wallets = await this.walletsRepository.findByWalletIds([walletId]);
+    const wallets = await this.walletsRepository.findByWalletIds([
+      walletId,
+      SourceId[from],
+    ]);
 
     const targetWallet = wallets.find((w) => w.id === walletId);
 
@@ -52,25 +54,23 @@ export class ChargeWalletHandler
       );
     }
 
-    const sourceWallets = await this.walletsRepository.findByWalletIds([
-      SourceId[from],
-    ]);
+    const sourceWallet = wallets.find((w) => w.id === SourceId[from]);
 
-    const transactionId = uuid.v4();
+    const transactionId = UUID.v4();
     const transaction = new Transactions(
       transactionId,
       amount,
-      sourceWallets[0],
+      sourceWallet,
       targetWallet,
     );
 
-    this.eventBus.publish(new CreateTransactionEvent(transaction));
+    this.eventBus.publish(new TransactionInitiatedEvent(transaction));
 
     setTimeout(async () => {
       targetWallet.charge(amount);
       await this.walletsRepository.save([targetWallet]);
       this.eventBus.publish(
-        new UpdateTransactionEvent(transactionId, TransactionStatus.SUCCESS),
+        new TransactionUpdatedEvent(transactionId, TransactionStatus.SUCCESS),
       );
     }, 20000);
 

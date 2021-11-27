@@ -9,7 +9,7 @@ import {
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
 import { GetTransactionByWalletIdQuery } from './queries/getTransactionsByWalletId/getTransactionsByWalletId.query';
-import { IGetTransactionsResponse } from './response/getTransactionsResponse';
+import { IGetTransactionsResponse } from './response/getTransactions.response';
 
 @ApiTags('transactions')
 @Controller('transactions')

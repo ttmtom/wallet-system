@@ -1,4 +1,5 @@
 import { Currency } from '@constants/currency';
+import * as currency from 'currency.js';
 import { Transactions } from 'src/transactions/transaction.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
@@ -48,10 +49,10 @@ export class Wallet {
   }
 
   pay(amount: number) {
-    this.balance -= amount;
+    this.balance = currency(this.balance).subtract(amount).value;
   }
 
   charge(amount: number) {
-    this.balance += amount;
+    this.balance = currency(this.balance).add(amount).value;
   }
 }

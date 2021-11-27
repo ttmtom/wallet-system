@@ -26,13 +26,13 @@ export class WalletsRepository implements IWalletsRepository {
       ChargeSource.BANK,
       Currency.HKD,
     );
-    bankWallet.charge(999999);
+    bankWallet.charge(99999999);
     const cardWallet = new Wallet(
       SourceId[ChargeSource.CREDIT_CARD],
       ChargeSource.CREDIT_CARD,
       Currency.HKD,
     );
-    cardWallet.charge(999999);
+    cardWallet.charge(99999999);
 
     this.repository.save([bankWallet, cardWallet]);
   }

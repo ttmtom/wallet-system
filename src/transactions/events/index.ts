@@ -1,4 +1,4 @@
-import { CreateTransactionListener } from './createTransaction/createTransaction.listener';
-import { UpdateTransactionListener } from './updateTransaction/updateTransaction.listener';
+import { TransactionInitiatedListener } from './transactionInitiated/transactionInitiated.listener';
+import { TransactionUpdatedListener } from './transactionUpdated/transactionUpdated.listener';
 
-export default [CreateTransactionListener, UpdateTransactionListener];
+export default [TransactionInitiatedListener, TransactionUpdatedListener];
