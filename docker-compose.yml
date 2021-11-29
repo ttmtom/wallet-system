@@ -22,3 +22,5 @@ services:
         volumes:
             - "./:/usr/src/app/"
         command: "yarn run start:dev"
+        depends_on:
+            - postgres
