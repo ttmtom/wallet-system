@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   HttpStatus,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import * as UUID from 'uuid';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -67,6 +68,7 @@ export class WalletsController {
   }
 
   @Post()
+  @HttpCode(201)
   async createWallet(
     @Body() createWalletDto: CreateWalletDto,
     @Headers('X-user-id') userId: string,
@@ -105,6 +107,7 @@ export class WalletsController {
   }
 
   @Post('/:id/transfer')
+  @HttpCode(201)
   async transfer(
     @Headers('X-user-id') userId: string,
     @Param(
