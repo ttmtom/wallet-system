@@ -13,9 +13,8 @@ import {
 } from '@nestjs/common';
 import * as UUID from 'uuid';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBody, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetWalletsQuery } from './queries/getWallets/getWallets.query';
-import { Wallet } from './wallet.entity';
 import { GetWalletsQueryDto } from './dto/getWalletsQuery.dto';
 import { CreateWalletDto } from './dto/createWallet.dto';
 import { Currency } from '@constants/currency';

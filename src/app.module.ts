@@ -11,7 +11,6 @@ import { Transactions } from './transactions/transaction.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    // TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     TypeOrmModule.forRoot({
       name: connectionName,
       type: 'postgres',

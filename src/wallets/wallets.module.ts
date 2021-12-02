@@ -6,6 +6,7 @@ import { WalletsController } from './wallets.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import queries from './queries';
 import commands from './commands';
+import events from './events';
 import {
   WalletsRepository,
   WalletsRepositorySymbol,
@@ -21,6 +22,7 @@ import {
     },
     ...queries,
     ...commands,
+    ...events,
   ],
   exports: [WalletsRepositorySymbol, TypeOrmModule],
 })

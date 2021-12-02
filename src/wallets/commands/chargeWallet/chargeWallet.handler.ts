@@ -1,11 +1,5 @@
 import { HttpException, HttpStatus, Inject } from '@nestjs/common';
-import {
-  CommandBus,
-  CommandHandler,
-  EventBus,
-  ICommandHandler,
-  QueryBus,
-} from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import * as UUID from 'uuid';
 import {
   WalletsRepository,
@@ -14,9 +8,8 @@ import {
 import { ChargeWalletCommand } from './chargeWallet.command';
 import { Transactions } from 'src/transactions/transaction.entity';
 import { TransactionInitiatedEvent } from '@transactions/events/transactionInitiated/transactionInitiated.event';
-import { TransactionUpdatedEvent } from '@transactions/events/transactionUpdated/transactionUpdated.event';
-import { TransactionStatus } from '@constants/transactionStatus';
 import { SourceId } from '@constants/chargeSource';
+import { ChargeConfirmedEvent } from '@wallet/events/chargeConfirmed/chargeConfirmed.event';
 
 @CommandHandler(ChargeWalletCommand)
 export class ChargeWalletHandler
@@ -25,9 +18,7 @@ export class ChargeWalletHandler
   constructor(
     @Inject(WalletsRepositorySymbol)
     private readonly walletsRepository: WalletsRepository,
-    private readonly queryBus: QueryBus,
     private readonly eventBus: EventBus,
-    private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: ChargeWalletCommand): Promise<Transactions> {
@@ -67,12 +58,15 @@ export class ChargeWalletHandler
     this.eventBus.publish(new TransactionInitiatedEvent(transaction));
 
     setTimeout(async () => {
-      targetWallet.charge(amount);
-      await this.walletsRepository.save([targetWallet]);
       this.eventBus.publish(
-        new TransactionUpdatedEvent(transactionId, TransactionStatus.SUCCESS),
+        new ChargeConfirmedEvent(
+          transactionId,
+          amount,
+          sourceWallet,
+          targetWallet,
+        ),
       );
-    }, 20000);
+    }, 10000);
 
     return transaction;
   }

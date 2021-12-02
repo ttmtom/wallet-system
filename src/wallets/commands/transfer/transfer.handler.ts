@@ -1,11 +1,5 @@
 import { HttpException, HttpStatus, Inject } from '@nestjs/common';
-import {
-  CommandBus,
-  CommandHandler,
-  EventBus,
-  ICommandHandler,
-  QueryBus,
-} from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import * as UUID from 'uuid';
 import {
   WalletsRepository,
@@ -14,17 +8,14 @@ import {
 import { TransferCommand } from './transfer.command';
 import { Transactions } from '@transactions/transaction.entity';
 import { TransactionInitiatedEvent } from '@transactions/events/transactionInitiated/transactionInitiated.event';
-import { TransactionUpdatedEvent } from '@transactions/events/transactionUpdated/transactionUpdated.event';
-import { TransactionStatus } from '@constants/transactionStatus';
+import { TransferConfirmedEvent } from '@wallet/events/transferConfirmed/transferConfirmed.event';
 
 @CommandHandler(TransferCommand)
 export class TransferHandler implements ICommandHandler<TransferCommand> {
   constructor(
     @Inject(WalletsRepositorySymbol)
     private readonly walletsRepository: WalletsRepository,
-    private readonly queryBus: QueryBus,
     private readonly eventBus: EventBus,
-    private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: TransferCommand): Promise<Transactions> {
@@ -70,23 +61,16 @@ export class TransferHandler implements ICommandHandler<TransferCommand> {
 
     this.eventBus.publish(new TransactionInitiatedEvent(transaction));
 
+    // mock confirm
     setTimeout(async () => {
-      if (sourceWallet.balance < amount) {
-        this.eventBus.publish(
-          new TransactionUpdatedEvent(
-            transactionId,
-            TransactionStatus.FAILED,
-            'Source wallet balance not enough',
-          ),
-        );
-      } else {
-        sourceWallet.pay(amount);
-        targetWallet.charge(amount);
-        await this.walletsRepository.save([sourceWallet, targetWallet]);
-        this.eventBus.publish(
-          new TransactionUpdatedEvent(transactionId, TransactionStatus.SUCCESS),
-        );
-      }
+      this.eventBus.publish(
+        new TransferConfirmedEvent(
+          transactionId,
+          amount,
+          sourceWallet,
+          targetWallet,
+        ),
+      );
     }, 20000);
 
     return transaction;

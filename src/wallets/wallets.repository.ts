@@ -3,11 +3,11 @@ import { Currency } from '@constants/currency';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { connectionName } from 'src/db/connection';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
 
 export interface IWalletsRepository {
-  save(wallets: Wallet[]): Promise<Wallet[]>;
+  save(wallets: Wallet[], manager: EntityManager): Promise<Wallet[]>;
   findAll(): Promise<Wallet[]>;
   findByOwnerId(id: string): Promise<Wallet[]>;
   findByWalletIds(ids: string[]): Promise<Wallet[]>;
