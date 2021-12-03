@@ -2,22 +2,26 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { ChargeWalletCommitCommand } from './chargeWalletCommit.command';
 import { TransactionUpdatedEvent } from '@transactions/events/transactionUpdated/transactionUpdated.event';
 import { TransactionStatus } from '@constants/transactionStatus';
-import { getConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { Wallet } from '@wallet/wallet.entity';
 import { connectionName } from 'src/db/connection';
+import { InjectConnection } from '@nestjs/typeorm';
 
 @CommandHandler(ChargeWalletCommitCommand)
 export class ChargeWalletCommitHandler
   implements ICommandHandler<ChargeWalletCommitCommand>
 {
-  constructor(private readonly eventBus: EventBus) {}
+  constructor(
+    private readonly eventBus: EventBus,
+    @InjectConnection(connectionName)
+    private readonly connection: Connection,
+  ) {}
 
   async execute(command: ChargeWalletCommitCommand): Promise<null> {
     const { transactionId, targetWallet, amount } = command;
 
     targetWallet.charge(amount);
-    const connection = getConnection(connectionName);
-    const queryRunner = connection.createQueryRunner();
+    const queryRunner = this.connection.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();

@@ -1,12 +1,10 @@
 import { TransactionStatus } from '@constants/transactionStatus';
 import { Wallet } from '@wallet/wallet.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseDBObject } from 'src/db/baseBDObject';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
-export class Transactions {
-  @PrimaryColumn('uuid')
-  id: string;
-
+export class Transactions extends BaseDBObject {
   @Column('numeric')
   amount: number;
 
@@ -28,18 +26,12 @@ export class Transactions {
   @Column('text')
   remark = '';
 
-  @Column('timestamp')
-  createAt: Date;
-
-  @Column('timestamp')
-  updateAt: Date;
-
   constructor(id: string, amount: number, from: Wallet, to: Wallet) {
+    super();
     this.id = id;
     this.amount = amount;
     this.from = from;
     this.to = to;
     this.status = TransactionStatus.PENDING;
-    this.createAt = this.updateAt = new Date();
   }
 }

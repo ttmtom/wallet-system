@@ -1,19 +1,11 @@
 import { Currency } from '@constants/currency';
 import * as currency from 'currency.js';
+import { BaseDBObject } from 'src/db/baseBDObject';
 import { Transactions } from 'src/transactions/transaction.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
-export class Wallet {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column('timestamp')
-  createdAt: Date;
-
-  @Column('timestamp')
-  updateAt: Date;
-
+export class Wallet extends BaseDBObject {
   @Column('numeric')
   balance: number;
 
@@ -41,10 +33,10 @@ export class Wallet {
   chargeRecords: Transactions[];
 
   constructor(owner: string, currency: Currency) {
+    super();
     this.owner = owner;
     this.currency = currency;
     this.balance = 0;
-    this.createdAt = this.updateAt = new Date();
   }
 
   pay(amount: number) {
