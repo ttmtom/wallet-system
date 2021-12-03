@@ -1,11 +1,11 @@
 import { Currency } from '@constants/currency';
 import * as currency from 'currency.js';
 import { Transactions } from 'src/transactions/transaction.entity';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Wallet {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('timestamp')
@@ -40,8 +40,7 @@ export class Wallet {
   )
   chargeRecords: Transactions[];
 
-  constructor(id: string, owner: string, currency: Currency) {
-    this.id = id;
+  constructor(owner: string, currency: Currency) {
     this.owner = owner;
     this.currency = currency;
     this.balance = 0;

@@ -25,11 +25,11 @@ import { ICreateWalletResponse } from './response/createWallet.response';
 import { IGetWalletResponse } from './response/getWallet.response';
 import { IGetWalletsResponse } from './response/getWallets.response';
 import { ChargeWalletCommand } from './commands/chargeWallet/chargeWallet.command';
-import { SourceId } from '@constants/chargeSource';
 import { ChargeWalletResponse } from './response/chargeWallet.response';
 import { TransferDto } from './dto/transfer.dto';
 import { TransferResponse } from './response/transfer.response';
 import { TransferCommand } from './commands/transfer/transfer.command';
+import { ChargeSource } from '@constants/chargeSource';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -88,8 +88,7 @@ export class WalletsController {
     id: string,
     @Body() chargeWalletDto: ChargeWalletDto,
   ): Promise<ChargeWalletResponse> {
-    const sourceId = SourceId[chargeWalletDto.from];
-    if (!sourceId) {
+    if (!Object.values(ChargeSource).includes(chargeWalletDto.from)) {
       throw new HttpException('Source not support', HttpStatus.BAD_REQUEST);
     }
 

@@ -1,4 +1,4 @@
-import { ChargeSource, SourceId } from '@constants/chargeSource';
+import { ChargeSource } from '@constants/chargeSource';
 import { Currency } from '@constants/currency';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,17 +21,9 @@ export class WalletsRepository implements IWalletsRepository {
     @InjectRepository(Wallet, connectionName)
     private readonly repository: Repository<Wallet>,
   ) {
-    const bankWallet = new Wallet(
-      SourceId[ChargeSource.BANK],
-      ChargeSource.BANK,
-      Currency.HKD,
-    );
+    const bankWallet = new Wallet(ChargeSource.BANK, Currency.HKD);
     bankWallet.charge(99999999);
-    const cardWallet = new Wallet(
-      SourceId[ChargeSource.CREDIT_CARD],
-      ChargeSource.CREDIT_CARD,
-      Currency.HKD,
-    );
+    const cardWallet = new Wallet(ChargeSource.CREDIT_CARD, Currency.HKD);
     cardWallet.charge(99999999);
 
     this.repository.save([bankWallet, cardWallet]);

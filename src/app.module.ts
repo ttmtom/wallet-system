@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { typeOrmConfigAsync } from 'src/db/typeorm.config';
 import { WalletsModule } from 'src/wallets/wallets.module';
 import { connectionName } from 'src/db/connection';
 import { Wallet } from 'src/wallets/wallet.entity';

@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
 import { Wallet } from 'src/wallets/wallet.entity';
-import * as UUID from 'uuid';
 import {
   WalletsRepository,
   WalletsRepositorySymbol,
@@ -32,9 +31,7 @@ export class CreateWalletHandler
       );
     }
 
-    const id = UUID.v4();
-
-    const wallet = new Wallet(id, command.ownerId, command.currency);
+    const wallet = new Wallet(command.ownerId, command.currency);
     const resp = await this.repository.save([wallet]);
     return resp[0];
   }

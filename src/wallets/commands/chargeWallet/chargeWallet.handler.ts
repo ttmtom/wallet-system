@@ -8,7 +8,6 @@ import {
 import { ChargeWalletCommand } from './chargeWallet.command';
 import { Transactions } from 'src/transactions/transaction.entity';
 import { TransactionInitiatedEvent } from '@transactions/events/transactionInitiated/transactionInitiated.event';
-import { SourceId } from '@constants/chargeSource';
 import { ChargeConfirmedEvent } from '@wallet/events/chargeConfirmed/chargeConfirmed.event';
 
 @CommandHandler(ChargeWalletCommand)
@@ -24,10 +23,8 @@ export class ChargeWalletHandler
   async execute(command: ChargeWalletCommand): Promise<Transactions> {
     const { walletId, ownerId, amount, from } = command;
 
-    const wallets = await this.walletsRepository.findByWalletIds([
-      walletId,
-      SourceId[from],
-    ]);
+    const wallets = await this.walletsRepository.findByWalletIds([walletId]);
+    const sourceWallets = await this.walletsRepository.findByOwnerId(from);
 
     const targetWallet = wallets.find((w) => w.id === walletId);
 
@@ -45,7 +42,7 @@ export class ChargeWalletHandler
       );
     }
 
-    const sourceWallet = wallets.find((w) => w.id === SourceId[from]);
+    const sourceWallet = sourceWallets.find((w) => w.owner === from);
 
     const transactionId = UUID.v4();
     const transaction = new Transactions(

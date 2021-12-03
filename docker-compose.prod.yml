@@ -13,7 +13,7 @@ services:
             - PGGSSENCMODE=disable
         volumes:
             - "./dbdata:/var/lib/postgresql/data"
-    dev:
+    server:
         build:
             context: .
             target: nestjs-prod
@@ -21,6 +21,6 @@ services:
             - "3000:3000"
         volumes:
             - "./:/usr/src/app/"
-        command: "yarn run start"
+        command: "yarn run start:prod"
         depends_on:
             - postgres
