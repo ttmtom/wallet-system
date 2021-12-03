@@ -44,6 +44,7 @@ export class TransferWalletCommitHandler
           new TransactionUpdatedEvent(transactionId, TransactionStatus.SUCCESS),
         );
       } catch (err) {
+        await queryRunner.rollbackTransaction();
         this.eventBus.publish(
           new TransactionUpdatedEvent(
             transactionId,
@@ -51,7 +52,6 @@ export class TransferWalletCommitHandler
             'transaction error',
           ),
         );
-        await queryRunner.rollbackTransaction();
       } finally {
         await queryRunner.release();
       }
