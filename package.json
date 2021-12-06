@@ -1,8 +1,8 @@
 {
   "name": "wallet-system",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Wallet system",
+  "author": "Tom Tam",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

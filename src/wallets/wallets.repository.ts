@@ -21,12 +21,27 @@ export class WalletsRepository implements IWalletsRepository {
     @InjectRepository(Wallet, connectionName)
     private readonly repository: Repository<Wallet>,
   ) {
-    const bankWallet = new Wallet(ChargeSource.BANK, Currency.HKD);
-    bankWallet.charge(99999999);
-    const cardWallet = new Wallet(ChargeSource.CREDIT_CARD, Currency.HKD);
-    cardWallet.charge(99999999);
+    // auto create charge source wallet, it should manual input
+    this.repository
+      .find({
+        where: [
+          { owner: ChargeSource.BANK },
+          { owner: ChargeSource.CREDIT_CARD },
+        ],
+      })
+      .then((res) => {
+        console.log(res);
+        if (!res.length) {
+          const bankWallet = new Wallet(ChargeSource.BANK, Currency.HKD, true);
+          const cardWallet = new Wallet(
+            ChargeSource.CREDIT_CARD,
+            Currency.HKD,
+            true,
+          );
 
-    this.repository.save([bankWallet, cardWallet]);
+          this.repository.save([bankWallet, cardWallet]);
+        }
+      });
   }
 
   async save(wallets: Wallet[]): Promise<Wallet[]> {

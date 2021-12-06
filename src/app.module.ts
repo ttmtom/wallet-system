@@ -20,6 +20,11 @@ import { Transactions } from './transactions/transaction.entity';
       database: 'DB',
       entities: [Wallet, Transactions],
       synchronize: true,
+      // migrations: ['db/migration/*{.ts}'],
+      // cli: {
+      //   migrationsDir: 'db/migration',
+      // },
+      // migrationsRun: true,
     }),
     WalletsModule,
     TransactionsModule,

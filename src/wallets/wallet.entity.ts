@@ -9,7 +9,7 @@ export class Wallet extends BaseDBObject {
   @Column('numeric')
   balance: number;
 
-  @Column('text')
+  @Column('varchar')
   owner: string;
 
   @Column({
@@ -32,11 +32,15 @@ export class Wallet extends BaseDBObject {
   )
   chargeRecords: Transactions[];
 
-  constructor(owner: string, currency: Currency) {
+  @Column('boolean')
+  isSourceWallet: boolean;
+
+  constructor(owner: string, currency: Currency, isSourceWallet = false) {
     super();
     this.owner = owner;
     this.currency = currency;
     this.balance = 0;
+    this.isSourceWallet = isSourceWallet;
   }
 
   pay(amount: number) {
