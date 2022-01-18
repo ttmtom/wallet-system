@@ -16,6 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@constants/*": ["src/constants/*"],
+      "@app/*": ["src/app/*"],
+      "@wallet/*": ["src/wallets/*"],
+      "@transactions/*": ["src/transactions/*"]
+    }
   }
 }
